@@ -2,17 +2,22 @@ workflows:
   android-workflow:
     name: Android Build
     environment:
+      java: 17
       flutter: stable
       xcode: latest
       cocoapods: default
     cache:
       cache_paths:
         - ~/.pub-cache
+        - ~/.gradle/caches
+        - ~/.gradle/wrapper
     scripts:
-      - name: Fetch and setup gradlew
+      - name: Clean and regenerate Gradle wrapper
         script: |
           cd android
-          curl -L -o gradlew "https://raw.githubusercontent.com/gradle/gradle/v8.3.0/gradlew"
+          rm -rf gradle/wrapper/gradle-wrapper.jar
+          rm -f gradlew gradlew.bat
+          gradle wrapper --gradle-version 8.3
           chmod +x gradlew
           cd ..
       - name: Install Flutter dependencies
@@ -20,6 +25,6 @@ workflows:
       - name: Generate Isar models
         script: flutter pub run build_runner build --delete-conflicting-outputs
       - name: Build Android APK
-        script: flutter build apk --release
+        script: flutter build apk --release -v
     artifacts:
       - build/app/outputs/flutter-apk/**/*.apk

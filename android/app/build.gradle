@@ -32,10 +32,6 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
 
-    coreLibraryDesugaring {
-        enabled true
-    }
-
     kotlinOptions {
         jvmTarget = '17'
     }

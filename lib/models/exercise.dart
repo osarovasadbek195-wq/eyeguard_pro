@@ -31,10 +31,8 @@ class Exercise {
     required this.name,
     required this.description,
     this.durationSeconds = 30,
-    DateTime? completedAt,
+    required this.completedAt,
     this.score = 0.0,
     this.repetitions = 0,
-  }) {
-    this.completedAt = completedAt ?? DateTime.now();
-  }
+  });
 }

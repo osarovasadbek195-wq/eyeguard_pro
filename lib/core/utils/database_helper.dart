@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import '../../models/profile.dart';
 import '../../models/exercise.dart';
 import '../../models/stats.dart';
+import '../../models/achievement.dart';
 
 class DatabaseHelper {
   static Isar? _isar;
@@ -17,6 +18,7 @@ class DatabaseHelper {
         ProfileSchema,
         ExerciseSchema,
         DailyStatsSchema,
+        AchievementSchema,
       ],
       directory: dir.path,
       inspector: true,

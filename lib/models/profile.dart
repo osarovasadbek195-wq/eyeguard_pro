@@ -21,11 +21,8 @@ class Profile {
     required this.name,
     required this.isGlasses,
     this.distanceThreshold = 0.7,
-    DateTime? createdAt,
-    DateTime? lastUsed,
+    required this.createdAt,
+    required this.lastUsed,
     this.pin,
-  }) {
-    this.createdAt = createdAt ?? DateTime.now();
-    this.lastUsed = lastUsed ?? DateTime.now();
-  }
+  });
 }

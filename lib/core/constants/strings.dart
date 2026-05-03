@@ -37,8 +37,15 @@ class AppStrings {
   static const String eyeDryness = 'Ko\'z Quruqligi';
   static const String eyeDrynessDesc = 'Har 2 soatda eslatma';
   
-  // Settings
-  static const String intensity = 'Kuchlanish';
+  // Achievements
+  static const String achievements = 'Yutuqlar';
+  static const String achievementUnlocked = 'Yangi yutuq!';
+  static const String beginner = 'Boshlovchi';
+  static const String beginnerDesc = 'Birinchi mashqni bajardingiz';
+  static const String eagleEye = 'Burgut Ko\'z';
+  static const String eagleEyeDesc = '100% tanaffuslarga rioya qildingiz';
+  static const String healthMaster = 'Sog\'lom Ko\'z ustasi';
+  static const String healthMasterDesc = '7 kun ketma-ket ilovadan foydalandingiz';
   static const String schedule = 'Jadval';
   static const String strictMode = 'Qattiq Rejim';
   static const String strictModeDesc = 'Majburiy tanaffus';

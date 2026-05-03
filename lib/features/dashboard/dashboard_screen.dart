@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/strings.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/hive_helper.dart';
+import '../achievements/achievements_screen.dart';
 
 // Feature toggle providers
 final blinkReminderProvider = StateProvider<bool>((ref) => 
@@ -166,6 +167,20 @@ class DashboardScreen extends ConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 24.0),
                   child: Row(
                     children: [
+                      Expanded(
+                        child: _buildQuickActionButton(
+                          context,
+                          icon: Icons.emoji_events,
+                          label: AppStrings.achievements,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const AchievementsScreen()),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: _buildQuickActionButton(
                           context,

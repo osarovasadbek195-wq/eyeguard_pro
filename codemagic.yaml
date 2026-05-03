@@ -9,14 +9,12 @@ workflows:
       cache_paths:
         - ~/.pub-cache
     scripts:
-      - name: Install Gradle & Wrapper
+      - name: Regenerate Android project files (Fix Gradle)
         script: |
-          cd android
-          wget https://services.gradle.org/distributions/gradle-8.0-bin.zip
-          unzip gradle-8.0-bin.zip
-          export PATH=$PATH:$(pwd)/gradle-8.0/bin
-          gradle wrapper --gradle-version 8.0
-          cd ..
+          rm -rf android/gradlew
+          rm -rf android/gradlew.bat
+          rm -rf android/gradle/wrapper/gradle-wrapper.jar
+          flutter create . --platforms=android
       - name: Install Flutter dependencies
         script: flutter pub get
       - name: Generate Isar models

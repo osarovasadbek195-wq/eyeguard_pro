@@ -23,7 +23,7 @@
     <application
         android:label="EyeGuard Pro"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@android:drawable/ic_menu_gallery"
         android:requestLegacyExternalStorage="true">
         
         <activity

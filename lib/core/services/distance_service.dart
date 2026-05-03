@@ -13,7 +13,7 @@ class DistanceService {
       minFaceSize: 0.15,
       performanceMode: FaceDetectorMode.accurate,
     );
-    _faceDetector = FaceDetector(options);
+    _faceDetector = FaceDetector(options: options);
   }
 
   double? calculateDistance(Face face) {

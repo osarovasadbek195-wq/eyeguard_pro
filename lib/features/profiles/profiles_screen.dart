@@ -165,7 +165,7 @@ class _ProfilesScreenState extends ConsumerState<ProfilesScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(
-              profile.isGlasses ? Icons.glasses : Icons.face,
+              profile.isGlasses ? Icons.visibility : Icons.face,
               color: AppTheme.primaryColor,
               size: 28,
             ),

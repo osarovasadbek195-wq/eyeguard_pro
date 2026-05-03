@@ -147,7 +147,7 @@ class _CameraTestWidgetState extends State<CameraTestWidget> {
                   }
                   widget.onToggle(!widget.isActive);
                 },
-                icon: Icon(widget.isActive ? Icons.camera_off : Icons.camera),
+                icon: Icon(widget.isActive ? Icons.videocam_off : Icons.camera),
                 label: Text(
                     widget.isActive ? 'Kamerani o\'chirish' : 'Kamerani yoqish'),
               ),

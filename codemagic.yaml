@@ -9,12 +9,6 @@ workflows:
       cache_paths:
         - ~/.pub-cache
     scripts:
-      - name: Regenerate Android project files (Fix Gradle)
-        script: |
-          rm -rf android/gradlew
-          rm -rf android/gradlew.bat
-          rm -rf android/gradle/wrapper/gradle-wrapper.jar
-          flutter create . --platforms=android
       - name: Install Flutter dependencies
         script: flutter pub get
       - name: Generate Isar models

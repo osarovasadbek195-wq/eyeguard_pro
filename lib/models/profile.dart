@@ -1,14 +1,8 @@
-import 'package:isar/isar.dart';
-
-part 'profile.g.dart';
-
-@Collection()
 class Profile {
-  Id id = Isar.autoIncrement;
+  int id = 0;
   
   late String name;
   
-  @Index()
   late bool isGlasses;
   
   late double distanceThreshold;
@@ -21,8 +15,9 @@ class Profile {
     required this.name,
     required this.isGlasses,
     this.distanceThreshold = 0.7,
-    required this.createdAt,
-    required this.lastUsed,
+    DateTime? createdAt,
+    DateTime? lastUsed,
     this.pin,
-  });
+  })  : createdAt = createdAt ?? DateTime.now(),
+        lastUsed = lastUsed ?? DateTime.now();
 }

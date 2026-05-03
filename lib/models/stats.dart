@@ -1,12 +1,6 @@
-import 'package:isar/isar.dart';
-
-part 'stats.g.dart';
-
-@Collection()
 class DailyStats {
-  Id id = Isar.autoIncrement;
+  int id = 0;
   
-  @Index()
   late DateTime date;
   
   late int screenTimeMinutes;

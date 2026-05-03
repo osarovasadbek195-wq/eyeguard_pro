@@ -1,12 +1,6 @@
-import 'package:isar/isar.dart';
-
-part 'achievement.g.dart';
-
-@Collection()
 class Achievement {
-  Id id = Isar.autoIncrement;
+  int id = 0;
 
-  @Index(unique: true)
   late String title;
   
   late String description;

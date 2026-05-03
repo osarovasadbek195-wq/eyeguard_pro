@@ -1,7 +1,3 @@
-import 'package:isar/isar.dart';
-
-part 'exercise.g.dart';
-
 enum ExerciseType {
   horizontal,
   vertical,
@@ -10,17 +6,14 @@ enum ExerciseType {
   focus,
 }
 
-@Collection()
 class Exercise {
-  Id id = Isar.autoIncrement;
+  int id = 0;
   
-  @enumerated
   late ExerciseType type;
   late String name;
   late String description;
   late int durationSeconds;
   
-  @Index()
   late DateTime completedAt;
   
   late double score;

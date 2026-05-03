@@ -5,6 +5,20 @@ allprojects {
     }
 }
 
+subprojects { subproject ->
+    subproject.plugins.withId("com.android.library") {
+        def androidExtension = subproject.extensions.findByName("android")
+        if (androidExtension != null && (androidExtension.namespace == null || androidExtension.namespace.toString().trim().isEmpty())) {
+            def fallbackNamespace = "com.eyeguard.pro.${subproject.name}"
+            def candidateNamespace = subproject.group == null ? fallbackNamespace : subproject.group.toString()
+            if (candidateNamespace.trim().isEmpty() || candidateNamespace == "unspecified") {
+                candidateNamespace = fallbackNamespace
+            }
+            androidExtension.namespace = candidateNamespace.replaceAll("[^A-Za-z0-9_.]", "_")
+        }
+    }
+}
+
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"

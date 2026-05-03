@@ -2,7 +2,7 @@ workflows:
   android-workflow:
     name: Android Build
     environment:
-      java: 17
+      java: 11
       flutter: stable
       xcode: latest
       cocoapods: default
@@ -12,6 +12,11 @@ workflows:
         - ~/.gradle/caches
         - ~/.gradle/wrapper
     scripts:
+      - name: Force Gradle 7.6.1 to match AGP 7.4.2
+        script: |
+          cd android
+          gradle wrapper --gradle-version 7.6.1
+          cd ..
       - name: Install Flutter dependencies
         script: flutter pub get
       - name: Generate Isar models

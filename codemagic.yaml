@@ -2,6 +2,7 @@ workflows:
   android-workflow:
     name: Android Build
     environment:
+      java: 17
       flutter: stable
       xcode: latest
       cocoapods: default
@@ -11,14 +12,6 @@ workflows:
         - ~/.gradle/caches
         - ~/.gradle/wrapper
     scripts:
-      - name: Clean and regenerate Gradle wrapper
-        script: |
-          cd android
-          rm -rf gradle/wrapper/gradle-wrapper.jar
-          rm -f gradlew gradlew.bat
-          gradle wrapper --gradle-version 7.6.1
-          chmod +x gradlew
-          cd ..
       - name: Install Flutter dependencies
         script: flutter pub get
       - name: Generate Isar models

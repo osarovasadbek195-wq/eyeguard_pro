@@ -3,11 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/strings.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/hive_helper.dart';
+import '../blink_reminder/blink_darkening_overlay.dart';
 import '../achievements/achievements_screen.dart';
 
 // Feature toggle providers
 final blinkReminderProvider = StateProvider<bool>((ref) => 
     HiveHelper.get('blinkReminder', defaultValue: false) ?? false);
+final blinkCreativeModeProvider = StateProvider<bool>((ref) => 
+    HiveHelper.get('blinkCreativeMode', defaultValue: false) ?? false);
 final breakReminderProvider = StateProvider<bool>((ref) => 
     HiveHelper.get('breakReminder', defaultValue: false) ?? false);
 final distanceMonitorProvider = StateProvider<bool>((ref) => 
@@ -24,198 +27,224 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isCreativeMode = ref.watch(blinkCreativeModeProvider);
+    
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: Theme.of(context).brightness == Brightness.light
-                ? [
-                    AppTheme.lightBackground,
-                    AppTheme.primaryColor.withOpacity(0.05),
-                  ]
-                : [
-                    AppTheme.darkBackground,
-                    AppTheme.primaryColor.withOpacity(0.05),
-                  ],
-          ),
-        ),
-        child: SafeArea(
-          child: CustomScrollView(
-            slivers: [
-              // App Bar
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        AppStrings.appName,
-                        style: Theme.of(context).textTheme.displayLarge?.copyWith(
-                              color: AppTheme.primaryColor,
-                            ),
+      body: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: Theme.of(context).brightness == Brightness.light
+                    ? [
+                        AppTheme.lightBackground,
+                        AppTheme.primaryColor.withOpacity(0.05),
+                      ]
+                    : [
+                        AppTheme.darkBackground,
+                        AppTheme.primaryColor.withOpacity(0.05),
+                      ],
+              ),
+            ),
+            child: SafeArea(
+              child: CustomScrollView(
+                slivers: [
+                  // App Bar
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            AppStrings.appName,
+                            style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                                  color: AppTheme.primaryColor,
+                                ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.settings_outlined),
+                            onPressed: () {
+                              // Navigate to settings
+                            },
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        icon: const Icon(Icons.settings_outlined),
-                        onPressed: () {
-                          // Navigate to settings
-                        },
+                    ),
+                  ),
+
+                  // Quick Stats
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: _buildQuickStats(context, ref),
+                    ),
+                  ),
+
+                  const SliverToBoxAdapter(child: SizedBox(height: 24)),
+
+                  // Feature Toggles
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Text(
+                        'Funksiyalar',
+                        style: Theme.of(context).textTheme.displayMedium,
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
 
-              // Quick Stats
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: _buildQuickStats(context),
-                ),
-              ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 16)),
 
-              const SliverToBoxAdapter(child: SizedBox(height: 24)),
-
-              // Feature Toggles
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Text(
-                    'Funksiyalar',
-                    style: Theme.of(context).textTheme.displayMedium,
-                  ),
-                ),
-              ),
-
-              const SliverToBoxAdapter(child: SizedBox(height: 16)),
-
-              // Feature Cards
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                sliver: SliverList(
-                  delegate: SliverChildListDelegate([
-                    _buildFeatureCard(
-                      context,
-                      ref,
-                      title: AppStrings.blinkReminder,
-                      description: AppStrings.blinkReminderDesc,
-                      icon: Icons.visibility,
-                      provider: blinkReminderProvider,
-                      color: AppTheme.primaryColor,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFeatureCard(
-                      context,
-                      ref,
-                      title: AppStrings.breakReminder,
-                      description: AppStrings.breakReminderDesc,
-                      icon: Icons.timer,
-                      provider: breakReminderProvider,
-                      color: AppTheme.successColor,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFeatureCard(
-                      context,
-                      ref,
-                      title: AppStrings.distanceMonitor,
-                      description: AppStrings.distanceMonitorDesc,
-                      icon: Icons.social_distance,
-                      provider: distanceMonitorProvider,
-                      color: AppTheme.accentColor,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFeatureCard(
-                      context,
-                      ref,
-                      title: AppStrings.blueFilter,
-                      description: AppStrings.blueFilterDesc,
-                      icon: Icons.filter_vintage,
-                      provider: blueFilterProvider,
-                      color: Colors.orange,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFeatureCard(
-                      context,
-                      ref,
-                      title: AppStrings.eyeDryness,
-                      description: AppStrings.eyeDrynessDesc,
-                      icon: Icons.water_drop,
-                      provider: eyeDrynessProvider,
-                      color: AppTheme.warningColor,
-                    ),
-                    const SizedBox(height: 16),
-                    _buildFeatureCard(
-                      context,
-                      ref,
-                      title: AppStrings.childrenMode,
-                      description: AppStrings.childrenModeDesc,
-                      icon: Icons.child_care,
-                      provider: childrenModeProvider,
-                      color: Colors.purple,
-                    ),
-                  ]),
-                ),
-              ),
-
-              const SliverToBoxAdapter(child: SizedBox(height: 32)),
-
-              // Quick Actions
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _buildQuickActionButton(
+                  // Feature Cards
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        _buildFeatureCard(
                           context,
-                          icon: Icons.emoji_events,
-                          label: AppStrings.achievements,
-                          onTap: () {
-                            Navigator.push(
+                          ref,
+                          title: AppStrings.blinkReminder,
+                          description: AppStrings.blinkReminderDesc,
+                          icon: Icons.visibility,
+                          provider: blinkReminderProvider,
+                          color: AppTheme.primaryColor,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildFeatureCard(
+                          context,
+                          ref,
+                          title: 'Kreativ Rejim',
+                          description: 'Ekranni qoraytiruvchi animatsiya',
+                          icon: Icons.animation,
+                          provider: blinkCreativeModeProvider,
+                          color: Colors.purple,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildFeatureCard(
+                          context,
+                          ref,
+                          title: AppStrings.breakReminder,
+                          description: AppStrings.breakReminderDesc,
+                          icon: Icons.timer,
+                          provider: breakReminderProvider,
+                          color: AppTheme.successColor,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildFeatureCard(
+                          context,
+                          ref,
+                          title: AppStrings.distanceMonitor,
+                          description: AppStrings.distanceMonitorDesc,
+                          icon: Icons.social_distance,
+                          provider: distanceMonitorProvider,
+                          color: AppTheme.accentColor,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildFeatureCard(
+                          context,
+                          ref,
+                          title: AppStrings.blueFilter,
+                          description: AppStrings.blueFilterDesc,
+                          icon: Icons.filter_vintage,
+                          provider: blueFilterProvider,
+                          color: Colors.orange,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildFeatureCard(
+                          context,
+                          ref,
+                          title: AppStrings.eyeDryness,
+                          description: AppStrings.eyeDrynessDesc,
+                          icon: Icons.water_drop,
+                          provider: eyeDrynessProvider,
+                          color: AppTheme.warningColor,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildFeatureCard(
+                          context,
+                          ref,
+                          title: AppStrings.childrenMode,
+                          description: AppStrings.childrenModeDesc,
+                          icon: Icons.child_care,
+                          provider: childrenModeProvider,
+                          color: Colors.purple,
+                        ),
+                      ]),
+                    ),
+                  ),
+
+                  const SliverToBoxAdapter(child: SizedBox(height: 32)),
+
+                  // Quick Actions
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _buildQuickActionButton(
                               context,
-                              MaterialPageRoute(builder: (context) => const AchievementsScreen()),
-                            );
-                          },
-                        ),
+                              icon: Icons.emoji_events,
+                              label: AppStrings.achievements,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const AchievementsScreen()),
+                                );
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: _buildQuickActionButton(
+                              context,
+                              icon: Icons.fitness_center,
+                              label: AppStrings.exercises,
+                              onTap: () {
+                                // Navigate to exercises
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: _buildQuickActionButton(
+                              context,
+                              icon: Icons.bar_chart,
+                              label: AppStrings.statistics,
+                              onTap: () {
+                                // Navigate to statistics
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: _buildQuickActionButton(
-                          context,
-                          icon: Icons.fitness_center,
-                          label: AppStrings.exercises,
-                          onTap: () {
-                            // Navigate to exercises
-                          },
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: _buildQuickActionButton(
-                          context,
-                          icon: Icons.bar_chart,
-                          label: AppStrings.statistics,
-                          onTap: () {
-                            // Navigate to statistics
-                          },
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
 
-              const SliverToBoxAdapter(child: SizedBox(height: 32)),
-            ],
+                  const SliverToBoxAdapter(child: SizedBox(height: 32)),
+                ],
+              ),
+            ),
           ),
-        ),
+          // Creative Mode Overlay
+          if (isCreativeMode)
+            BlinkDarkeningOverlay(
+              isActive: isCreativeMode,
+              darknessLevel: 0.7,
+              onDismiss: () {
+                ref.read(blinkCreativeModeProvider.notifier).state = false;
+                HiveHelper.set('blinkCreativeMode', false);
+              },
+            ),
+        ],
       ),
     );
   }
 
-  Widget _buildQuickStats(BuildContext context) {
+  Widget _buildQuickStats(BuildContext context, WidgetRef ref) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(

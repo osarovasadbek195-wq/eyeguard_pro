@@ -10,6 +10,7 @@ import '../../../core/services/notification_service.dart';
 enum BlinkMode {
   simple, // No camera, just visual dot
   advanced, // Camera-based eye tracking
+  creative, // Creative darkening animation
 }
 
 class BlinkReminderService {
@@ -29,6 +30,11 @@ class BlinkReminderService {
   static const double _earThreshold = 0.25;
   static const int _historyLength = 5;
   
+  // Creative mode
+  double _darknessLevel = 0.0;
+  int _noBlinkSeconds = 0;
+  static const int _maxNoBlinkSeconds = 10;
+  
   BlinkReminderService(
     this._cameraService,
     this._distanceService,
@@ -43,6 +49,8 @@ class BlinkReminderService {
     
     if (mode == BlinkMode.advanced) {
       await _startAdvancedMode();
+    } else if (mode == BlinkMode.creative) {
+      await _startCreativeMode();
     } else {
       _startSimpleMode();
     }
@@ -52,6 +60,27 @@ class BlinkReminderService {
     // Visual dot blinks every 5-10 seconds
     _blinkTimer = Timer.periodic(const Duration(seconds: 7), (timer) {
       _showBlinkIndicator();
+    });
+  }
+
+  Future<void> _startCreativeMode() async {
+    // Darkening animation when no blink detected
+    _darknessLevel = 0.0;
+    _noBlinkSeconds = 0;
+    
+    _blinkTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _noBlinkSeconds++;
+      
+      // Gradually increase darkness
+      if (_noBlinkSeconds > 3) {
+        _darknessLevel = ((_noBlinkSeconds - 3) / _maxNoBlinkSeconds).clamp(0.0, 0.8);
+      }
+      
+      // Reset on blink (simulated)
+      if (_noBlinkSeconds > _maxNoBlinkSeconds) {
+        _darknessLevel = 0.0;
+        _noBlinkSeconds = 0;
+      }
     });
   }
 
@@ -180,6 +209,13 @@ class BlinkReminderService {
   bool get isRunning => _isRunning;
   BlinkMode get mode => _mode;
   int get blinkCount => _blinkCount;
+  double get darknessLevel => _darknessLevel;
+  int get noBlinkSeconds => _noBlinkSeconds;
+
+  void resetCreativeMode() {
+    _darknessLevel = 0.0;
+    _noBlinkSeconds = 0;
+  }
 }
 
 final blinkReminderServiceProvider = Provider<BlinkReminderService>((ref) {

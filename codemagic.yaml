@@ -2,7 +2,6 @@ workflows:
   android-workflow:
     name: Android Build
     environment:
-      java: 17
       flutter: stable
       xcode: latest
       cocoapods: default
@@ -17,7 +16,7 @@ workflows:
           cd android
           rm -rf gradle/wrapper/gradle-wrapper.jar
           rm -f gradlew gradlew.bat
-          gradle wrapper --gradle-version 8.3
+          gradle wrapper --gradle-version 7.6.1
           chmod +x gradlew
           cd ..
       - name: Install Flutter dependencies

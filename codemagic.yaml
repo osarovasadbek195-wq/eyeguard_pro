@@ -9,6 +9,11 @@ workflows:
       cache_paths:
         - ~/.pub-cache
     scripts:
+      - name: Fix Gradle Wrapper
+        script: |
+          cd android
+          gradle wrapper --gradle-version 8.0
+          cd ..
       - name: Install Flutter dependencies
         script: flutter pub get
       - name: Generate Isar models

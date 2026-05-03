@@ -14,6 +14,7 @@ enum ExerciseType {
 class Exercise {
   Id id = Isar.autoIncrement;
   
+  @enumerated
   late ExerciseType type;
   late String name;
   late String description;

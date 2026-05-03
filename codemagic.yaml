@@ -9,9 +9,12 @@ workflows:
       cache_paths:
         - ~/.pub-cache
     scripts:
-      - name: Fix Gradle Wrapper
+      - name: Install Gradle & Wrapper
         script: |
           cd android
+          wget https://services.gradle.org/distributions/gradle-8.0-bin.zip
+          unzip gradle-8.0-bin.zip
+          export PATH=$PATH:$(pwd)/gradle-8.0/bin
           gradle wrapper --gradle-version 8.0
           cd ..
       - name: Install Flutter dependencies

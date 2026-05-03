@@ -5,6 +5,9 @@ import '../../../core/theme/app_theme.dart';
 import '../../../core/utils/hive_helper.dart';
 import '../blink_reminder/blink_darkening_overlay.dart';
 import '../achievements/achievements_screen.dart';
+import '../settings/settings_screen.dart';
+import '../eye_exercises/exercises_screen.dart';
+import '../statistics/statistics_screen.dart';
 
 // Feature toggle providers
 final blinkReminderProvider = StateProvider<bool>((ref) => 
@@ -67,7 +70,10 @@ class DashboardScreen extends ConsumerWidget {
                           IconButton(
                             icon: const Icon(Icons.settings_outlined),
                             onPressed: () {
-                              // Navigate to settings
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                              );
                             },
                           ),
                         ],
@@ -204,7 +210,10 @@ class DashboardScreen extends ConsumerWidget {
                               icon: Icons.fitness_center,
                               label: AppStrings.exercises,
                               onTap: () {
-                                // Navigate to exercises
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const ExercisesScreen()),
+                                );
                               },
                             ),
                           ),
@@ -215,7 +224,10 @@ class DashboardScreen extends ConsumerWidget {
                               icon: Icons.bar_chart,
                               label: AppStrings.statistics,
                               onTap: () {
-                                // Navigate to statistics
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => const StatisticsScreen()),
+                                );
                               },
                             ),
                           ),

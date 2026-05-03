@@ -15,9 +15,9 @@ workflows:
       - name: Install Flutter dependencies
         script: flutter pub get
       - name: Build universal Android APK
-        script: flutter build apk --release --no-pub --target-platform android-arm,android-arm64,android-x64 -v
+        script: flutter build apk --release --no-pub --target-platform android-arm,android-arm64,android-x64
       - name: Build Android App Bundle
-        script: flutter build appbundle --release --no-pub --target-platform android-arm,android-arm64,android-x64 -v
+        script: flutter build appbundle --release --no-pub --target-platform android-arm,android-arm64,android-x64
     artifacts:
       - build/app/outputs/flutter-apk/**/*.apk
       - build/app/outputs/bundle/**/*.aab

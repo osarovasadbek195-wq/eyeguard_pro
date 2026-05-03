@@ -14,12 +14,10 @@ workflows:
     scripts:
       - name: Install Flutter dependencies
         script: flutter pub get
-      - name: Generate Isar models
-        script: flutter pub run build_runner build --delete-conflicting-outputs
-      - name: Build universal Android APK
-        script: flutter build apk --release --no-pub --target-platform android-arm,android-arm64,android-x64 -v
-      - name: Build Android App Bundle
-        script: flutter build appbundle --release --no-pub --target-platform android-arm,android-arm64,android-x64 -v
+      - name: Build Android APK (debug)
+        script: flutter build apk --debug --no-pub -v
+      - name: Build Android App Bundle (debug)
+        script: flutter build appbundle --debug --no-pub -v
     artifacts:
       - build/app/outputs/flutter-apk/**/*.apk
       - build/app/outputs/bundle/**/*.aab

@@ -51,6 +51,15 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")
 
+# Custom plugins
+add_library(autostart_plugin STATIC autostart_plugin.cpp)
+add_library(filter_plugin STATIC filter_plugin.cpp)
+
+target_include_directories(autostart_plugin PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(filter_plugin PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+
+target_link_libraries(${BINARY_NAME} PRIVATE autostart_plugin filter_plugin)
+
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
 include(flutter/generated_plugins.cmake)

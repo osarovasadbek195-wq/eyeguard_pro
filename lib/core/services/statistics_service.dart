@@ -18,21 +18,21 @@ class StatisticsService {
     final today = _getTodayKey();
     final stats = await _getOrCreateStats(today);
     stats.screenTimeMinutes += minutes;
-    await stats.save();
+    await _box.put(today, stats);
   }
   
   Future<void> recordBlink(int count) async {
     final today = _getTodayKey();
     final stats = await _getOrCreateStats(today);
     stats.blinkCount += count;
-    await stats.save();
+    await _box.put(today, stats);
   }
   
   Future<void> recordDistanceAlert() async {
     final today = _getTodayKey();
     final stats = await _getOrCreateStats(today);
     stats.distanceAlerts++;
-    await stats.save();
+    await _box.put(today, stats);
   }
   
   Future<void> recordBreakTaken() async {
@@ -40,7 +40,7 @@ class StatisticsService {
     final stats = await _getOrCreateStats(today);
     stats.breaksTaken++;
     stats.breakCompliance = stats.breaksTaken / stats.totalBreaks;
-    await stats.save();
+    await _box.put(today, stats);
   }
   
   Future<void> recordBreakMissed() async {
@@ -48,14 +48,14 @@ class StatisticsService {
     final stats = await _getOrCreateStats(today);
     stats.breaksMissed++;
     stats.breakCompliance = stats.breaksTaken / stats.totalBreaks;
-    await stats.save();
+    await _box.put(today, stats);
   }
   
   Future<void> recordExerciseScore(int score) async {
     final today = _getTodayKey();
     final stats = await _getOrCreateStats(today);
     stats.exerciseScore += score;
-    await stats.save();
+    await _box.put(today, stats);
   }
   
   Future<DailyStats?> getStats(DateTime date) async {

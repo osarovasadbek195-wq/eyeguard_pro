@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 
@@ -31,7 +32,7 @@ class NotificationService {
         channelKey: 'eyeguard_pro_channel',
         title: title,
         body: body,
-        payload: payload,
+        payload: payload != null ? {'data': payload} : null,
         notificationLayout: NotificationLayout.Default,
       ),
     );
@@ -50,7 +51,7 @@ class NotificationService {
         channelKey: 'eyeguard_pro_channel',
         title: title,
         body: body,
-        payload: payload,
+        payload: payload != null ? {'data': payload} : null,
         notificationLayout: NotificationLayout.Default,
       ),
       schedule: NotificationCalendar.fromDate(date: scheduledDate),

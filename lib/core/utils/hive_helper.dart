@@ -12,7 +12,7 @@ class HiveHelper {
   
   static bool get isFirstRun {
     final box = Hive.box(settingsBox);
-    return box.get(isFirstRunKey, defaultValue: true);
+    return box.get(isFirstRunKey, defaultValue: false);
   }
   
   static Future<void> setFirstRun(bool value) async {

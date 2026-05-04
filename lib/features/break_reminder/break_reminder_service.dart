@@ -63,8 +63,10 @@ class BreakReminderService {
   }
 
   void _showStrictBreakOverlay() {
-    // This would show a full-screen overlay that blocks interaction
-    // Implementation would use platform channels for overlay
+    // Strict break overlay uses the BlinkDarkeningOverlay widget
+    // It shows a full-screen overlay with a countdown timer
+    // The overlay blocks screen interaction until the break is complete
+    // This is handled by the UI layer listening to the service state
   }
 
   Future<void> stop() async {

@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/constants/strings.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../../core/services/statistics_service.dart';
 import '../../../models/stats.dart';
 
 class StatisticsScreen extends ConsumerStatefulWidget {
@@ -14,6 +15,24 @@ class StatisticsScreen extends ConsumerStatefulWidget {
 
 class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
   String _selectedPeriod = 'weekly';
+  Map<String, dynamic> _summary = {};
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSummary();
+  }
+
+  Future<void> _loadSummary() async {
+    final statisticsService = ref.read(statisticsServiceProvider);
+    await statisticsService.init();
+    final summary = await statisticsService.getSummary(_selectedPeriod);
+    if (mounted) {
+      setState(() {
+        _summary = summary;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,6 +111,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
         onTap: () {
           setState(() {
             _selectedPeriod = value;
+            _loadSummary();
           });
         },
         borderRadius: BorderRadius.circular(12),
@@ -115,11 +135,19 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
   }
 
   Widget _buildSummaryCards() {
+    final avgScreenTime = _summary['avgScreenTime'] ?? 0;
+    final hours = avgScreenTime ~/ 60;
+    final minutes = avgScreenTime % 60;
+    final screenTimeText = hours > 0 ? '$hours soat $minutes daqiqa' : '$minutes daqiqa';
+    
+    final compliance = (_summary['breakCompliance'] ?? 0.0) * 100;
+    final complianceText = '${compliance.toInt()}%';
+    
     return Row(
       children: [
         Expanded(
           child: _buildSummaryCard(
-            '3 soat',
+            screenTimeText,
             AppStrings.screenTime,
             Icons.access_time,
             AppTheme.primaryColor,
@@ -128,7 +156,7 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
         const SizedBox(width: 16),
         Expanded(
           child: _buildSummaryCard(
-            '85%',
+            complianceText,
             AppStrings.breakCompliance,
             Icons.check_circle,
             AppTheme.successColor,
@@ -311,6 +339,20 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
   }
 
   Widget _buildDetailedStats() {
+    final totalScreenTime = _summary['totalScreenTime'] ?? 0;
+    final totalHours = totalScreenTime ~/ 60;
+    final totalMinutes = totalScreenTime % 60;
+    final totalScreenTimeText = totalHours > 0 ? '$totalHours soat $totalMinutes daqiqa' : '$totalMinutes daqiqa';
+    
+    final avgScreenTime = _summary['avgScreenTime'] ?? 0;
+    final avgHours = avgScreenTime ~/ 60;
+    final avgMinutes = avgScreenTime % 60;
+    final avgScreenTimeText = avgHours > 0 ? '$avgHours soat' : '$avgMinutes daqiqa';
+    
+    final totalBreaks = _summary['totalBreaks'] ?? 0;
+    final exerciseScore = _summary['totalExerciseScore'] ?? 0;
+    final distanceAlerts = _summary['totalDistanceAlerts'] ?? 0;
+    
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -327,11 +369,11 @@ class _StatisticsScreenState extends ConsumerState<StatisticsScreen> {
                 ),
           ),
           const SizedBox(height: 16),
-          _buildStatRow('Jami ekran vaqti', '12 soat 45 daqiqa'),
-          _buildStatRow('O\'rtacha kunlik', '3 soat'),
-          _buildStatRow('Tanaffuslar soni', '24 ta'),
-          _buildStatRow('Mashqlar balli', '850 ball'),
-          _buildStatRow('Masofa ogohlantirishlari', '8 ta'),
+          _buildStatRow('Jami ekran vaqti', totalScreenTimeText),
+          _buildStatRow('O\'rtacha kunlik', avgScreenTimeText),
+          _buildStatRow('Tanaffuslar soni', '$totalBreaks ta'),
+          _buildStatRow('Mashqlar balli', '$exerciseScore ball'),
+          _buildStatRow('Masofa ogohlantirishlari', '$distanceAlerts ta'),
         ],
       ),
     );

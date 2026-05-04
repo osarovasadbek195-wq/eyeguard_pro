@@ -5,6 +5,7 @@ import 'core/theme/app_theme.dart';
 import 'core/utils/hive_helper.dart';
 import 'core/utils/database_helper.dart';
 import 'core/services/notification_service.dart';
+import 'core/services/statistics_service.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/dashboard/dashboard_screen.dart';
 
@@ -19,6 +20,10 @@ void main() async {
   
   // Initialize notifications
   await NotificationService.initialize();
+  
+  // Initialize statistics service
+  final statisticsService = StatisticsService();
+  await statisticsService.init();
   
   runApp(
     const ProviderScope(

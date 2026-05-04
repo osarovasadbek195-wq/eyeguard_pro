@@ -5,12 +5,14 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import '../../../core/services/camera_service.dart';
 import '../../../core/services/distance_service.dart';
 import '../../../core/services/notification_service.dart';
+import '../../../core/services/statistics_service.dart';
 import '../../../core/utils/hive_helper.dart';
 
 class DistanceMonitorService {
   final CameraService _cameraService;
   final DistanceService _distanceService;
   final NotificationService _notificationService;
+  final StatisticsService _statisticsService;
   
   Timer? _monitoringTimer;
   bool _isRunning = false;
@@ -21,6 +23,7 @@ class DistanceMonitorService {
     this._cameraService,
     this._distanceService,
     this._notificationService,
+    this._statisticsService,
   );
 
   Future<void> start() async {
@@ -90,6 +93,9 @@ class DistanceMonitorService {
   void _handleTooClose() {
     _alertCount++;
     
+    // Record distance alert
+    _statisticsService.recordDistanceAlert();
+    
     // Show warning every 3rd alert to avoid spam
     if (_alertCount % 3 == 0) {
       _notificationService.showNotification(
@@ -122,10 +128,12 @@ final distanceMonitorServiceProvider = Provider<DistanceMonitorService>((ref) {
   final cameraService = ref.watch(cameraServiceProvider);
   final distanceService = ref.watch(distanceServiceProvider);
   final notificationService = ref.watch(notificationServiceProvider);
+  final statisticsService = ref.watch(statisticsServiceProvider);
   
   return DistanceMonitorService(
     cameraService,
     distanceService,
     notificationService,
+    statisticsService,
   );
 });

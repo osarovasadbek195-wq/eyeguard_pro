@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/services/notification_service.dart';
 import '../../../core/services/background_service.dart';
+import '../../../core/services/statistics_service.dart';
 import '../../../core/utils/hive_helper.dart';
 
 class BreakReminderService {
   final NotificationService _notificationService;
   final BackgroundService _backgroundService;
+  final StatisticsService _statisticsService;
   
   Timer? _timer;
   bool _isRunning = false;
@@ -17,6 +19,7 @@ class BreakReminderService {
   BreakReminderService(
     this._notificationService,
     this._backgroundService,
+    this._statisticsService,
   );
 
   Future<void> start() async {
@@ -55,6 +58,9 @@ class BreakReminderService {
       title: 'Tanaffus vaqti!',
       body: '20 soniya uzoqqa qarang',
     );
+    
+    // Record break missed (default)
+    await _statisticsService.recordBreakMissed();
     
     if (_isStrictMode) {
       // In strict mode, show overlay that blocks screen
@@ -101,9 +107,11 @@ class BreakReminderService {
 final breakReminderServiceProvider = Provider<BreakReminderService>((ref) {
   final notificationService = ref.watch(notificationServiceProvider);
   final backgroundService = ref.watch(backgroundServiceProvider);
+  final statisticsService = ref.watch(statisticsServiceProvider);
   
   return BreakReminderService(
     notificationService,
     backgroundService,
+    statisticsService,
   );
 });

@@ -6,6 +6,7 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 import '../../../core/services/camera_service.dart';
 import '../../../core/services/distance_service.dart';
 import '../../../core/services/notification_service.dart';
+import '../../../core/services/statistics_service.dart';
 
 enum BlinkMode {
   simple, // No camera, just visual dot
@@ -17,6 +18,7 @@ class BlinkReminderService {
   final CameraService _cameraService;
   final DistanceService _distanceService;
   final NotificationService _notificationService;
+  final StatisticsService _statisticsService;
   
   Timer? _blinkTimer;
   Timer? _analysisTimer;
@@ -39,6 +41,7 @@ class BlinkReminderService {
     this._cameraService,
     this._distanceService,
     this._notificationService,
+    this._statisticsService,
   );
 
   Future<void> start(BlinkMode mode) async {
@@ -205,6 +208,8 @@ class BlinkReminderService {
         body: 'Ko\'zlarini ko\'proq pirpiratingiz',
       );
     }
+    // Record blink statistics
+    _statisticsService.recordBlink(_blinkCount);
     _blinkCount = 0;
   }
 
@@ -242,10 +247,12 @@ final blinkReminderServiceProvider = Provider<BlinkReminderService>((ref) {
   final cameraService = ref.watch(cameraServiceProvider);
   final distanceService = ref.watch(distanceServiceProvider);
   final notificationService = ref.watch(notificationServiceProvider);
+  final statisticsService = ref.watch(statisticsServiceProvider);
   
   return BlinkReminderService(
     cameraService,
     distanceService,
     notificationService,
+    statisticsService,
   );
 });

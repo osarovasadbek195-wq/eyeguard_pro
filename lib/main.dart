@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/hive_helper.dart';
 import 'core/utils/database_helper.dart';
+import 'core/services/notification_service.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/dashboard/dashboard_screen.dart';
 
@@ -15,6 +16,9 @@ void main() async {
   
   // Initialize Isar database
   await DatabaseHelper.init();
+  
+  // Initialize notifications
+  await NotificationService.initialize();
   
   runApp(
     const ProviderScope(

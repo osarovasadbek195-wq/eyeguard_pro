@@ -38,6 +38,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
       vsync: this,
     );
     _animationController.forward();
+    // Request permissions automatically on start
+    _requestPermissions();
   }
 
   @override
@@ -51,6 +53,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen>
     await Permission.camera.request();
     await Permission.systemAlertWindow.request();
     await Permission.notification.request();
+    await Permission.ignoreBatteryOptimizations.request();
   }
 
   Future<void> _completeOnboarding() async {
